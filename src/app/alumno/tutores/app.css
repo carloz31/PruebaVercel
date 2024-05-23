@@ -1,0 +1,15 @@
+.titulo-principal{
+    font-size:  40px;
+    font-family: 'Nunito',sans-serif;
+    color : rgb(4,59,113);
+    font-weight:bold;
+    margin-left :45px;
+}
+
+.otros-tutores{
+   
+}
+
+.buscadores{
+    display: flex;
+}

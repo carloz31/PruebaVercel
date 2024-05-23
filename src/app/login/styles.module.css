@@ -1,0 +1,54 @@
+.containerPrincipal{
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #0884FC;
+    border-radius: 10px;
+    padding: 40px 40px 10px 40px;
+    background-color: white;
+}
+.containerSecundario{
+    text-align: center;
+}
+
+.containerSecundario .ant-form-item-explain {
+    text-align: left !important;
+}
+
+.ant-form-item-explain, .ant-form-item-extra {
+    text-align: left !important;
+}
+
+.forgotPassword{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0884FC;
+}
+.boton{
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+}
+.bttn{
+    width: 250px;
+    margin: 0 auto !important;
+    background-color: #0884FC;
+    color: white !important;
+}
+.labelIngreso{
+    font-size: 25px;
+    display: flex !important;
+    justify-content: flex-start !important; 
+    align-items: left !important;
+    font-weight: bold;
+    margin-top: 30px;
+}
+.bttnLoginGoogle{
+    width: 370px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}

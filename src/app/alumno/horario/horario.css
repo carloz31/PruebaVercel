@@ -1,0 +1,101 @@
+
+.titulo-principal{
+  font-size:  40px;
+  font-family: 'Nunito',sans-serif;
+  color : rgb(4,59,113);
+  font-weight:bold;
+  margin-left :45px;
+  margin-top: 20px;
+}
+
+.fecha{
+  font-size:  25px;
+  font-family: 'Nunito',sans-serif;
+  color : black;
+  margin-right: 836px;
+  margin-left :45px;
+  
+}
+
+.horizontal-list{
+    display: flex; /* Establece la visualización de los elementos de la lista en línea */
+    list-style-type: none; /* Elimina los puntos o viñetas predeterminados de la lista */
+    padding: 0; /* Elimina el relleno predeterminado de la lista */
+    font-family: "Nunito";
+    font-size : 16px;
+    margin-left: 52px;
+    margin-right: 700px;
+    
+}
+
+.horizontal-list li {
+    margin-right: 60px; /* Añade un margen derecho entre los elementos de la lista */
+  }
+
+  .horizontal-list li::before {
+    content: "asd";
+    display: block;
+    width: 10px; /* Ancho de la bolita */
+    height: 10px; /* Altura de la bolita */
+    border-radius: 50%; /* Hace que la bolita sea redonda */
+    background-color: red; /* Cambia el color de la bolita */
+    position: absolute; /* Posiciona el pseudo-elemento en relación al elemento <li> */
+    left: -20px; /* Desplaza la bolita a la izquierda del elemento <li> */
+    top: 50%; /* Centra verticalmente la bolita */
+    transform: translateY(-50%); /* Ajusta la posición vertical de la bolita */
+  }
+
+  .calendario-contenedor{
+    margin-left: 52px;
+    margin-top:18px;
+    margin-right:51px;
+  }
+
+  .fila-1{
+    display : flex;
+    margin-top: 20px;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 30px; 
+  }
+
+  
+  
+  .combo-box-tutor {
+    margin-right: 30px; /* Deja un espacio de 70px desde el borde derecho */
+    flex: 0 1 auto; /* Permite que el elemento se reduzca y se expanda según sea necesario */
+  }
+  
+  @media (min-width: 10%) {
+    .combo-box-tutor {
+      margin-right: 10px; /* Reduce el margen en pantallas más pequeñas para permitir más espacio de movimiento */
+      width: 10%; /* Asegura que el combo box ocupe todo el ancho disponible si es necesario */
+    }
+  }
+  
+  .fila-2{
+    display : flex;
+    margin-top: 20px;
+    height: 40px;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 60px; 
+  }
+
+  
+.boton {
+
+  background-color: rgb(8,132,252);
+  width: 156px;
+  height: 34px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  
+}
+
+.palabra{
+  padding-top: 8px;
+}

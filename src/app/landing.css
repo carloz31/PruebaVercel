@@ -1,0 +1,9 @@
+.landing-header {
+  background: #0777E3;
+  display: flex;
+  align-items: center;
+}
+
+.logo-header{
+  margin: 16px 24px 16px 0px;
+}
