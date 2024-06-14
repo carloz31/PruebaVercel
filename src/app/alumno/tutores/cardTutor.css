@@ -1,96 +1,120 @@
-
-
-
-.card{
+.card {
     display: flex;
     background-color: white;
-
-    border: 1px solid rgb(217,217,217);
+    border: 1px solid rgb(217, 217, 217);
     border-radius: 15px;
-
-    margin: 57px 49px;
-
+    /*margin: 57px;*/
+    margin-bottom: 57px;
+    margin-top: 57px;
+    margin-right: 100px;
     width: 329px;
-    height: 170px;
-
+    height: 178px;
     display: inline-block;
     position: relative;
-    font-family: 'Nunito',Arial, Helvetica, sans-serif;
-
+    font-family: 'Nunito', Arial, Helvetica, sans-serif;
 }
 
-.card-header{
+.card-header {
     padding-left: 13px;
     padding-top: 10px;
     padding-right: 13px;
     padding-bottom: 10px;
 }
-.info{
-   margin-top: 50px;
-   padding-left: 2px;
+
+.info {
+    margin-top: 50px;
+    padding-left: 2px;
 }
 
-
-.nombre{
-    
+.nombre {
     font-size: 20px;
     height: 20px;
     width: 279px;
     margin-bottom: 15px;
-
 }
+
+
 
 .codigo {
     font-size: 14px;
     height: 20px;
     width: 279px;
     margin-bottom: 7px;
-    
-}
-.div-temas{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    
 }
 
-.tema{
-    color: rgb(114,114,114);
+.tema {
+    color: rgb(114, 114, 114);
     font-size: 14px;
     height: 22px;
     width: 60px;
     margin-right: 5px;
-    content: "";
-    white-space: nowrap; /* Evita que el texto se envuelva */
-    overflow: hidden; /* Oculta el texto que no cabe en el espacio disponible */
-    text-overflow: ellipsis;   
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.listaTutorias{
+
+
+
+
+.div-temas{
     display: flex;
-    color: rgb(114,114,114);
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea si no hay suficiente espacio */
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+
+.listaTutorias {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    width: 200px;
+    height: 44px;
+    color: rgb(114, 114, 114);
     gap: 5px;
-    max-width: calc(100% - 70px);   
+}
+
+.text-tutorias {
+    display: inline-block;
    
+    margin-right: 6px;
 }
 
-.listaTutorias p {
-    white-space: nowrap; /* Evita que los elementos de la lista se rompan */
-    margin: 0; /* Espacio entre las líneas */
+/*.div-temas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 
 
-.aside{
+.listaTutorias {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    width: 200px;
+    height: 44px;
+    color: rgb(114, 114, 114);
+    gap: 5px;
+}
+
+.text-tutorias {
+    display: inline;
+    white-space: nowrap;
+    margin: 0;
+}*/
+
+.aside {
     position: absolute;
     right: 13px;
     top: 18px;
+    width: 156px;
 }
 
 .boton {
-
-    background-color: rgb(8,132,252);
+    background-color: rgb(8, 132, 252);
     width: 156px;
     height: 34px;
     color: white;
@@ -98,9 +122,8 @@
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    
 }
 
 .button:hover {
-    background-color: rgb(8,132,252);
+    background-color: rgb(8, 132, 252);
 }

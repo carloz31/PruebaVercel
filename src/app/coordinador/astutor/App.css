@@ -28,7 +28,9 @@
     align-items: center;
     justify-content: flex-end;
     align-items: flex-start;
+    gap: 8px;
     flex-grow: 1;
+    flex-wrap: wrap;
 }
 
 /* Specific button styles */
@@ -38,8 +40,6 @@
     border: none;
     padding: 6px 20px;
     min-width: 120px;
-    margin-right: 8px;
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: center;

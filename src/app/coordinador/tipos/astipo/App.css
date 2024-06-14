@@ -1,0 +1,155 @@
+/* General styles that enforce left alignment */
+.leftAlignPlaceholder .ant-select-selection-placeholder,
+.ant-select-selector, 
+.ant-select-selection-item, 
+.ant-select-item-option-content {
+    text-align: left !important;
+}
+
+/* Styles for dropdowns */
+.dropdownStyleTipo {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+/* Responsive adjustments for dropdowns */
+@media (min-width: 768px) {
+    .dropdownStyleTipo {
+        width: 40%;
+    }
+}
+
+.custom-table{
+    width: 100%;
+    min-width: unset !important;
+}
+
+/* Search bar styles */
+.searchStyle {
+    flex: 1;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Responsive adjustments for search bar */
+@media (min-width: 768px) {
+    .searchStyle {
+        max-width: 300px;
+        margin-right: 15px;
+        margin-bottom: 0;
+    }
+}
+
+.bold-text {
+    font-weight: 600;
+    color: #d9d9d9;
+    font-size: 18px;
+}
+
+.empty-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    gap: 20px;
+}
+
+.titleText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 110px;
+    margin-right: 5px;
+    text-align: left;
+    font-size: 1.5rem;
+}
+
+/* Responsive adjustments for title text */
+@media (max-width: 576px) {
+    .titleText {
+        font-size: 1rem;
+        min-width: 80px;
+    }
+}
+
+.titleTextMiddle {
+    white-space: nowrap;
+    min-width: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+    text-align: left;
+    font-size: 1.5rem;
+}
+
+/* Responsive adjustments for title text middle */
+@media (max-width: 576px) {
+    .titleTextMiddle {
+        font-size: 1rem;
+        min-width: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+.buttonContainerStyle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+/* Container for buttons */
+.buttonContainerStyle .ant-btn.buttonStyle {
+    background-color: #0884fc;
+    color: #fff;
+    border: none;
+    padding: 6px 20px;
+    min-width: 100px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.cancelButtonStyle .ant-btn.buttonStyle {
+    background-color: #d9d9d9;
+    color: #fff;
+    border: none;
+    padding: 6px 20px;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Styles for dropdown container */
+.dropdownContainerStyleTipo {
+    display: flex;
+    width: 100%;
+    margin-bottom: 16px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Responsive adjustments for dropdown container */
+@media (min-width: 768px) {
+    .dropdownContainerStyleTipo {
+        width: 75%;
+    }
+}
+
+.flexContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}

@@ -1,0 +1,10 @@
+.fila{
+    padding: 6px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-radius: 6px;
+    outline: 1px solid lightgray;
+    align-items: center;
+    text-align: center;
+    background: white;
+}   

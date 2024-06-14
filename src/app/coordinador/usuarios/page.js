@@ -1,20 +1,23 @@
 "use client";
 import LayoutComponent from "@/components/LayoutComponent";
 import { useEffect, useState } from "react";
-import { Button, Flex, Typography } from "antd";
+import { Button, Flex, Typography, message } from "antd";
 import { ProductOutlined } from "@ant-design/icons";
 import TableComponent from "@/components/TableComponent";
-import axios from "axios";
+import { useRouter } from 'next/navigation';
+import axios from '@/utils/axiosConfig';
+import { useUser } from '@/context/UserContext';
 import { coordinadorItems } from "@/utils/menuItems";
 import SearchInput from "@/components/SearchInput";
 import UserTypeSelect from "@/components/UserTypeSelect";
 import SelectEstadoModal from "@/components/SelectEstadoModal";
 import UserForm from "@/components/UserForm";
+import EditUserModal from "@/components/EditUserModal";
+import { Form } from "antd";
 
 const { Title } = Typography;
 
 export default function Home() {
-  const [mostrarInsertar, setMostrarInsertar] = useState(false);
   const [codigo, setCodigo] = useState("");
   const [nombres, setNombres] = useState("");
   const [apellidos, setApellidos] = useState("");
@@ -25,19 +28,32 @@ export default function Home() {
   const [usuarios, setUsuarios] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTipoUsuario, setSelectedTipoUsuario] = useState("");
   const [isEstadoModalVisible, setIsEstadoModalVisible] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState(1);
+  const [usuarioEditando, setUsuarioEditando] = useState(null);
+  const [form] = Form.useForm();
+  const [especialidades, setEspecialidades] = useState([]);
+  const [tipoUsuarioSeleccionado, setTipoUsuarioSeleccionado] = useState("");
+  const [especialidad, setEspecialidad] = useState("");
+  const [tipoTutoria, setTipoTutoria] = useState(null);
+  const [correoOriginal, setCorreoOriginal] = useState("");
+  const { user } = useUser();
+  const router = useRouter();
 
   const onSearch = async () => {
     await get();
   };
 
   const get = async () => {
+    if(user?.rolSeleccionado !== 2 && user?.rolSeleccionado !== 5){ //no está con rol de coordinador
+      router.back(); //regresa a la página anterior
+      return;
+    }
     setIsLoading(true);
     try {
-      let url = `${process.env.backend}/usuarioApi/usuariosFiltrados`;
+      let url = `${process.env.backend}/usuarioApi/usuariosFiltrados/${user.id}/${user.rolSeleccionado}`;
 
       if (busquedaInput || selectedEstado !== "1" || selectedTipoUsuario) {
         url += `?codigoNombre=${
@@ -47,11 +63,18 @@ export default function Home() {
 
       const response = await axios.get(url);
 
+      console.log("response", response.data);
+
       const data = response.data.map((usuario) => ({
         key: usuario.id,
-        id: usuario.persona.id,
+        id: usuario.id,
+        idPersona: usuario.persona.id,
         nombres: `${usuario.persona.nombre} ${usuario.persona.apellidoPaterno} ${usuario.persona.apellidoMaterno}`,
         correo: usuario.correo,
+        nombre: usuario.persona.nombre,
+        apellidos: `${usuario.persona.apellidoPaterno} ${usuario.persona.apellidoMaterno}`,
+        celular: usuario.persona.celular,
+        dni: usuario.persona.dni,
         tipoUsuario: usuario.tipoUsuario,
         estado: selectedEstado === 1 ? "Activo" : "Inactivo",
       }));
@@ -65,8 +88,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    get();
-  }, []);
+    if(user && user.id){
+      get();
+    }
+  }, [user]);
 
   useEffect(() => {
     const delaySearch = setTimeout(() => {
@@ -76,29 +101,39 @@ export default function Home() {
     return () => clearTimeout(delaySearch);
   }, [busquedaInput, selectedTipoUsuario, selectedEstado]);
 
-  const clearInput = () => {
-    setCodigo("");
-    setNombres("");
-    setApellidos("");
-    setCelular("");
-    setCorreo("");
-    setTipoUsuario("");
-  };
+  useEffect(() => {
+    const fetchEspecialidades = async () => {
+      try {
+        debugger
+        const response = await axios.get(
+          `/especialidadApi/listarEspecialidadesActivasPorIdUsuario/${user.id}/${user.rolSeleccionado}`
+        );
+        setEspecialidades(response.data);
+      } catch (error) {
+        console.error("Error al obtener las especialidades:", error);
+      }
+    };
+    fetchEspecialidades();
+  }, []);
 
+  
   const handleChangeEstado = async (record) => {
+    debugger
     try {
       let estado = record.estado === "Activo" ? 0 : 1; // Determinar el nuevo estado
 
       if (record.tipoUsuario === "Alumno") {
         // Si es alumno, cambiar el estado del alumno
-        await axios.put(
-          `${process.env.backend}/alumnoApi/cambiarEstadoAlumno/${record.id}/${estado}`
+        await axios.post( 
+          `${process.env.backend}/alumnoApi/cambiarEstadoAlumno/${record.idPersona}/${estado}`
         );
+        message.success("El alumno fue desactivado satisfactoriamente.");
       } else if (record.tipoUsuario === "Tutor") {
         // Si es tutor, cambiar el estado del tutor
-        await axios.put(
-          `${process.env.backend}/tutorApi/cambiarEstadoTutor/${record.id}/${estado}`
+        await axios.post(
+          `${process.env.backend}/tutorApi/cambiarEstadoTutor/${record.idPersona}/${estado}`
         );
+        message.success("El tutor fue desactivado satisfactoriamente.");
       }
 
       await get(); // Actualizar la lista de usuarios después de cambiar el estado
@@ -107,57 +142,13 @@ export default function Home() {
     }
   };
 
-  const handleInsertarClick = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.backend}/usuarioApi/crearUsuario`,
-        {
-          codigo,
-          nombres,
-          apellidos,
-          celular,
-          correo,
-          tipoUsuario,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.status === 200) {
-        alert("Usuario insertado exitosamente");
-        clearInput();
-        await get();
-      } else {
-        alert("Error al insertar usuario");
-      }
-    } catch (error) {
-      console.error("Error al insertar usuario:", error);
-      console.error(
-        "Detalles de la respuesta del servidor:",
-        error.response.data
-      );
-    }
-  };
-
-  const toggleMostrarInsertar = () => {
-    setMostrarInsertar(!mostrarInsertar);
+  const handleEdit = (usuario) => {
+    setUsuarioEditando(usuario);
+    setIsEditModalOpen(true);
   };
 
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const handleOk = async () => {
-    await handleInsertarClick();
-    setIsModalOpen(false);
-    setSelectedOption("seleccionar");
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSelectedOption("seleccionar");
   };
 
   const handleBusquedaChange = (e) => {
@@ -226,7 +217,6 @@ export default function Home() {
             </Button>
           </Flex>
         </Flex>
-
         <TableComponent
           isLoading={isLoading}
           usuarios={usuarios.map((usuario, index) => ({
@@ -235,19 +225,40 @@ export default function Home() {
             estado: selectedEstado === 1 ? "Activo" : "Inactivo",
           }))}
           handleChangeEstado={handleChangeEstado}
+          handleEdit={handleEdit}
         />
       </LayoutComponent>
 
       <UserForm
         isModalOpen={isModalOpen}
-        handleOk={handleOk}
-        handleCancel={handleCancel}
+        handleOk={() => {
+          setIsModalOpen(false);
+          get();
+        }}
+        handleCancel={() => setIsModalOpen(false)}
         setCodigo={setCodigo}
         setNombres={setNombres}
         setApellidos={setApellidos}
         setCelular={setCelular}
         setCorreo={setCorreo}
         setTipoUsuario={setTipoUsuario}
+        especialidadesProp={especialidades}
+      />
+
+      <EditUserModal
+        isModalOpen={isEditModalOpen}
+        handleOk={() => {
+          setIsEditModalOpen(false);
+          get();
+        }}
+        handleCancel={() => setIsEditModalOpen(false)}
+        usuarioEditando={usuarioEditando}
+        form={form}
+        setTipoUsuarioSeleccionado={setTipoUsuarioSeleccionado}
+        setEspecialidad={setEspecialidad}
+        setTipoTutoria={setTipoTutoria}
+        setCorreoOriginal={setCorreoOriginal}
+        especialidades={especialidades}
       />
 
       <SelectEstadoModal

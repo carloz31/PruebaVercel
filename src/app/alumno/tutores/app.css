@@ -1,15 +1,97 @@
 .titulo-principal{
-    font-size:  40px;
+    font-size:  32px;
     font-family: 'Nunito',sans-serif;
     color : rgb(4,59,113);
     font-weight:bold;
-    margin-left :45px;
+    margin-bottom : 20px
 }
 
-.otros-tutores{
+.titleText {
+    white-space: nowrap; /* Prevents wrapping at white spaces */
+    overflow: hidden; /* Prevents text overflow */
+    text-overflow: ellipsis; /* Adds an ellipsis if text overflows */
+    min-width: 110px; /* Minimum width for the title */
+    margin-right: 5px; /* Space between title and colon */
    
+    text-align: left;
+    font-size: 1.5rem; /* Adjust the size as needed */
 }
 
-.buscadores{
-    display: flex;
+.tutores{
+    margin-left : 70px;
 }
+
+
+
+/* Styles for dropdowns */
+.dropdownStyle {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.dropdownContainerStyle {
+    display: flex;
+    width: 60%;
+    margin-bottom: 16px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+@media (max-width: 768px) {
+    .dropdownContainerStyle {
+        flex-direction: column;
+        width: 100%; 
+        align-items: flex-start; 
+    }
+   
+    .tutores{
+        margin-left: 0px; 
+    }
+
+    .dropdownStyle {
+        margin-left: 0px; 
+    }
+}
+
+
+
+
+@media (max-width: 480px) {
+    
+    .titleText {
+        min-width: 100px; /* Smaller minimum width for small devices */
+        font-size: 14px; /* Smaller font size for small devices */
+        text-align: left;
+    }
+
+}
+
+
+
+
+
+:where(.css-dev-only-do-not-override-1d2oegb).ant-result .anticon {
+    font-size: 100px; /* Ajusta el tamaño según sea necesario */
+}
+
+:where(.css-dev-only-do-not-override-1d2oegb).ant-result {
+    text-align: center; /* Centra el texto */
+}
+
+.falla{
+  justify-content: center;
+  height: 623px;
+  padding:15%;
+}
+
+.ant-result-icon{
+    height: 80px;
+}
+
+.anticon-exclamation-circle{
+    font-size: 70px;
+}
+
+
+

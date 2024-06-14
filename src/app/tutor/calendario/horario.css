@@ -1,0 +1,157 @@
+.titulo-principal {
+  font-size: 32px;
+  color: rgb(4, 59, 113);
+  font-weight: bold;
+  margin-top: 14px;
+  margin-bottom: 20px;
+}
+
+.daypilot-today {
+  background-color: rgba(135, 206, 235, 0.3); /* Celeste claro */
+}
+
+.horizontal-list li::before {
+  content: "asd";
+  display: block;
+  width: 10px; /* Ancho de la bolita */
+  height: 10px; /* Altura de la bolita */
+  border-radius: 50%; /* Hace que la bolita sea redonda */
+  background-color: red; /* Cambia el color de la bolita */
+  position: absolute; /* Posiciona el pseudo-elemento en relación al elemento <li> */
+  left: -20px; /* Desplaza la bolita a la izquierda del elemento <li> */
+  top: 50%; /* Centra verticalmente la bolita */
+  transform: translateY(-50%); /* Ajusta la posición vertical de la bolita */
+}
+
+.calendario-contenedor {
+  margin-left: 0px;
+  margin-top: 10px;
+  height: 900px
+}
+
+.contenedor-fecha {
+  align-items: center;
+  margin-right: 50px;
+}
+
+.fecha {
+  font-size: 25px;
+  color: black;
+  margin-left: 10px;
+}
+
+.horizontal-list {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  padding: 0;
+  font-size: 16px;
+  margin-right: 4px; /* Ajusta este valor según sea necesario */
+}
+
+.horizontal-list li {
+  margin-left: 24px; /* Ajusta este valor según sea necesario */
+  display: flex;
+  flex-direction: row;
+}
+
+.boton {
+  height: 38px; /* Ajusta la altura para que coincida con el Select */
+  margin-right: 55px; /* Ajusta este valor según sea necesario */
+  background-color: rgb(8, 132, 252);
+
+  width: 156px;
+  height: 34px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.titleText {
+  white-space: nowrap; /* Prevents wrapping at white spaces */
+  overflow: hidden; /* Prevents text overflow */
+  text-overflow: ellipsis; /* Adds an ellipsis if text overflows */
+  min-width: 110px; /* Minimum width for the title */
+  margin-right: 5px; /* Space between title and colon */
+  text-align: left;
+  font-size: 1.5rem; /* Adjust the size as needed */
+}
+
+
+.fila-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.fila-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px; /* Ajusta este valor según sea necesario */
+}
+
+.dropdownContainerStyle {
+  display: flex;
+  width: 60%;
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dropdownStyle {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+@media (max-width: 1280px) {
+  .fila-1 {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .fila-2 {
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .dropdownContainerStyle {
+    display: flex;
+    width: 60%;
+    margin-bottom: 16px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 0px;
+  }
+
+  .dropdownStyle {
+    margin-left: 0px;
+  }
+
+  .horizontal-list {
+
+    margin-left: 0px; /* Ajusta este valor según sea necesario */
+  }
+
+  .fecha {
+    margin-left: 0px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .titleText {
+    min-width: 100px; /* Smaller minimum width for small devices */
+    font-size: 14px; /* Smaller font size for small devices */
+    text-align: left;
+  }
+
+}
+

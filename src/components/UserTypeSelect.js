@@ -1,13 +1,12 @@
 import React from "react";
 import { Select } from "antd";
 
-const UserTypeSelect = ({ value, onChange, onSearch }) => {
+const UserTypeSelect = ({ value, onChange}) => {
   return (
     <Select
       value={value}
       onChange={(value) => {
         onChange(value);
-        //onSearch();
       }}
       style={{ width: 500, marginLeft: 10 }}
       placeholder="Seleccione el tipo de usuario"

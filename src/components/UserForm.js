@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select } from "antd";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Modal, Form, Input, Select , message} from "antd";
+import axios from '@/utils/axiosConfig';
 import TipoTutoriaSelect from "./TipoTutoriaSelect";
 
 const UserForm = ({
@@ -13,27 +13,20 @@ const UserForm = ({
   setCelular,
   setCorreo,
   setTipoUsuario,
+  especialidadesProp,
 }) => {
   const [especialidad, setEspecialidad] = useState("");
   const [tipoTutoria, setTipoTutoria] = useState(null);
   const [tipoUsuarioSeleccionado, setTipoUsuarioSeleccionado] = useState("");
-  const [especialidades, setEspecialidades] = useState([]);
   const [form] = Form.useForm();
+  const especialidades = especialidadesProp; 
 
   useEffect(() => {
-    const fetchEspecialidades = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.backend}/especialidadApi/listarTodosEspecialidad`
-        );
-        setEspecialidades(response.data);
-      } catch (error) {
-        console.error("Error al obtener las especialidades:", error);
-      }
-    };
-
-    fetchEspecialidades();
-  }, []);
+    form.resetFields();
+    setTipoUsuarioSeleccionado("");
+    setEspecialidad("");
+    setTipoTutoria(null);
+  }, [isModalOpen]);
 
   const handleTipoUsuarioChange = (value) => {
     setTipoUsuarioSeleccionado(value);
@@ -45,7 +38,7 @@ const UserForm = ({
     try {
       const values = await form.validateFields();
 
-      if (tipoUsuarioSeleccionado === "Alumno") {
+      if (values.tipoUsuario === "Alumno") {
         // Crear alumno
         const alumnoData = {
           nombre: values.nombres,
@@ -64,13 +57,13 @@ const UserForm = ({
         };
 
         const alumnoResponse = await axios.post(
-          `${process.env.backend}/alumnoApi/crearAlumno`,
+          `/alumnoApi/crearAlumno`,
           alumnoData,
           {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (alumnoResponse.status === 200) {
@@ -101,20 +94,25 @@ const UserForm = ({
           };
 
           const usuarioResponse = await axios.post(
-            `${process.env.backend}/usuarioApi/crearUsuario`,
+            `/usuarioApi/crearUsuario`,
             usuarioData,
             {
               headers: {
                 "Content-Type": "application/json",
               },
-            }
+            },
           );
 
           if (usuarioResponse.status === 200) {
-            console.log("Usuario del alumno creado exitosamente");
-            alert("Alumno y usuario creados exitosamente");
-            clearInput();
-            handleOk();
+            if (especialidad) {
+              await axios.post(
+                `${process.env.backend}/alumnoApi/asignarEspecialidadAlumno/${alumnoId}/${especialidad}`
+              );
+            }
+              console.log("El alumno y todas sus dependencias fue creado exitosamente");
+              message.success("Alumno creado exitosamente.");
+              clearInput();
+              handleOk();
           } else {
             console.error("Error al crear el usuario del alumno");
             alert("Error al crear el usuario del alumno");
@@ -123,7 +121,7 @@ const UserForm = ({
           console.error("Error al crear el alumno");
           alert("Error al crear el alumno");
         }
-      } else if (tipoUsuarioSeleccionado === "Tutor") {
+      } else if (values.tipoUsuario === "Tutor") {
         // Crear tutor
         const tutorData = {
           nombre: values.nombres,
@@ -136,13 +134,13 @@ const UserForm = ({
         };
 
         const tutorResponse = await axios.post(
-          `${process.env.backend}/tutorApi/crearTutor`,
+          `/tutorApi/crearTutor`,
           tutorData,
           {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (tutorResponse.status === 200) {
@@ -151,7 +149,7 @@ const UserForm = ({
           // Asignar tipo de tutoría al tutor
           if (tipoTutoria) {
             await axios.post(
-              `${process.env.backend}/tipoTutoriaApi/asignarTipoTutoriaATutor/${tipoTutoria}/${tutorId}`
+              `/tipoTutoriaApi/asignarTipoTutoriaATutor/${tipoTutoria}/${tutorId}`,
             );
           }
 
@@ -180,18 +178,18 @@ const UserForm = ({
           };
 
           const usuarioResponse = await axios.post(
-            `${process.env.backend}/usuarioApi/crearUsuario`,
+            `/usuarioApi/crearUsuario`,
             usuarioData,
             {
               headers: {
                 "Content-Type": "application/json",
               },
-            }
+            },
           );
 
           if (usuarioResponse.status === 200) {
             console.log("Usuario del tutor creado exitosamente");
-            alert("Tutor, tipo de tutoría y usuario creados exitosamente");
+            message.success("Tutor creado exitosamente.");
             clearInput();
             handleOk();
           } else {
@@ -204,8 +202,7 @@ const UserForm = ({
         }
       }
     } catch (error) {
-      console.error("Error al crear usuario:", error);
-      console.error("Detalles de la respuesta del servidor:", error.response.data);
+      console.error("Error al guardar usuario:", error);
     }
   };
 
@@ -237,7 +234,10 @@ const UserForm = ({
           label="DNI"
           rules={[
             { required: true, message: "Por favor, ingrese el DNI" },
-            { pattern: /^\d{0,8}$/, message: "El DNI debe contener hasta 8 números" },
+            {
+              pattern: /^\d{0,8}$/,
+              message: "El DNI debe contener hasta 8 números",
+            },
           ]}
         >
           <Input onChange={(e) => setCodigo(e.target.value)} />
@@ -247,7 +247,10 @@ const UserForm = ({
           label="Nombres"
           rules={[
             { required: true, message: "Por favor, ingrese los nombres" },
-            { pattern: /^[a-zA-Z\s]+$/, message: "Los nombres solo deben contener letras del alfabeto" },
+            {
+              pattern: /^[a-zA-Z\s]+$/,
+              message: "Los nombres solo deben contener letras del alfabeto",
+            },
           ]}
         >
           <Input onChange={(e) => setNombres(e.target.value)} />
@@ -257,7 +260,10 @@ const UserForm = ({
           label="Apellidos"
           rules={[
             { required: true, message: "Por favor, ingrese los apellidos" },
-            { pattern: /^[a-zA-Z\s]+$/, message: "Los apellidos solo deben contener letras del alfabeto" },
+            {
+              pattern: /^[a-zA-Z\s]+$/,
+              message: "Los apellidos solo deben contener letras del alfabeto",
+            },
           ]}
         >
           <Input onChange={(e) => setApellidos(e.target.value)} />
@@ -270,7 +276,10 @@ const UserForm = ({
               required: true,
               message: "Por favor, ingrese el número de teléfono",
             },
-            { pattern: /^\d{0,9}$/, message: "El teléfono debe contener hasta 9 números" },
+            {
+              pattern: /^\d{0,9}$/,
+              message: "El teléfono debe contener hasta 9 números",
+            },
           ]}
         >
           <Input onChange={(e) => setCelular(e.target.value)} />
@@ -283,7 +292,10 @@ const UserForm = ({
               required: true,
               message: "Por favor, ingrese el correo electrónico",
             },
-            { type: "email", message: "Por favor, ingrese un correo electrónico válido" },
+            {
+              type: "email",
+              message: "Por favor, ingrese un correo electrónico válido",
+            },
           ]}
         >
           <Input onChange={(e) => setCorreo(e.target.value)} />

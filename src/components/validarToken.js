@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/utils/axiosConfig';;
 
 // Función para validar el token en el backend
 export default async function validaToken(email) {

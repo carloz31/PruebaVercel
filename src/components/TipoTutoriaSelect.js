@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Select } from "antd";
-import axios from "axios";
+import axios from "@/utils/axiosConfig";
 
 const TipoTutoriaSelect = ({ value, onChange }) => {
   const [tiposTutoria, setTiposTutoria] = useState([]);
@@ -9,7 +9,7 @@ const TipoTutoriaSelect = ({ value, onChange }) => {
     const fetchTiposTutoria = async () => {
       try {
         const response = await axios.get(
-          `${process.env.backend}/tipoTutoriaApi/listarTodosTiposTutoria`
+          `/tipoTutoriaApi/listarTodosTiposTutoria`,
         );
         setTiposTutoria(response.data);
       } catch (error) {

@@ -8,7 +8,12 @@ import {
 
 const { Column } = Table;
 
-const TableComponent = ({ isLoading, usuarios, handleChangeEstado }) => {
+const TableComponent = ({
+  isLoading,
+  usuarios,
+  handleChangeEstado,
+  handleEdit,
+}) => {
   const renderEstado = (text, record) => {
     const estadoStyle = {
       padding: "4px 8px",
@@ -17,18 +22,14 @@ const TableComponent = ({ isLoading, usuarios, handleChangeEstado }) => {
       textAlign: "center",
       display: "inline-block",
     };
-
     if (record.estado === "Activo") {
       estadoStyle.backgroundColor = "#52c41a";
     } else if (record.estado === "Inactivo") {
       estadoStyle.backgroundColor = "#f5222d";
     }
-
     return <span style={estadoStyle}>{record.estado}</span>;
   };
-
   if (isLoading) return <Spin size="large" />;
-
   return (
     <Table dataSource={usuarios}>
       <Column title="Nº" dataIndex="key" key="key" align="center" />
@@ -58,7 +59,10 @@ const TableComponent = ({ isLoading, usuarios, handleChangeEstado }) => {
         key="Acción"
         render={(text, record) => (
           <Space size="middle">
-            <EditOutlined style={{ fontSize: "16px", color: "#0884FC" }} />
+            <EditOutlined
+              style={{ fontSize: "16px", color: "#0884FC" }}
+              onClick={() => handleEdit(record)}
+            />
             {record.estado === "Activo" ? (
               <MinusCircleOutlined
                 style={{ fontSize: "16px", color: "#0884FC" }}
@@ -76,5 +80,4 @@ const TableComponent = ({ isLoading, usuarios, handleChangeEstado }) => {
     </Table>
   );
 };
-
 export default TableComponent;

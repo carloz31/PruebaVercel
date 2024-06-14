@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import LayoutComponent from "@/components/LayoutComponent";
 import { Button, Typography, message, Spin } from "antd";
-import axios from "axios";
+import axios from '@/utils/axiosConfig';
 import { coordinadorItems } from "@/utils/menuItems";
 import CardAlumnoCoordi from "@/components/cards/cardAlumnoCoordi";
 import CustomSelect from '@/components/coordinador/CustomSelect';
+import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import './App.css';
 import '@/components/cards/cardAlumnoCoordi.css'; 
@@ -22,24 +23,20 @@ export default function Home() {
   const [alumnoDropdownValue, setAlumnoDropdownValue] = useState(undefined);
   const [alumnosAsignadosDelTutor, setAlumnosAsignadosDelTutor] = useState([]);
   const [tempRemovedAlumnos, setTempRemovedAlumnos] = useState([]);
-  const [idUsuarioSesion,setIdUsuarioSesion] = useState();
-  const router = useRouter(); 
-
-  useEffect(() => {
-    const id = localStorage.getItem("userID")
-    if(id !== null && id !== undefined){
-      setIdUsuarioSesion(id);
-    }
-    else{
-      console.log("No hay nada");
-      router.push('/login');
-    }    
-  }, [router]);
-
+  const [alumnos, setAlumnos] = useState([]);
+  const [tutores, setTutores] = useState([]);
+  const { user } = useUser();
+  const router = useRouter();
+ 
   const get = async () => {
+    if(user?.rolSeleccionado !== 2 && user?.rolSeleccionado !== 5){ //no está con rol de coordinador
+      router.back(); //regresa a la página anterior
+      return;
+    }
     setIsLoading(true);
-    try { //trae los tipos de tutoria que puede gestionar el asesor (de la especialidad o facultad, esencialmente)
-      const response = await axios.get(`${process.env.backend}/tipoTutoriaApi/listarTiposTutoriaTutorAsignadoPorCoordinador/${idUsuarioSesion}`);
+    try {
+      // Trae los tipos de tutoria que puede gestionar el asesor (de la especialidad o facultad, esencialmente)
+      const response = await axios.get(`/tipoTutoriaApi/listarTiposTutoriaTutorAsignadoPorCoordinador/${user.id}/${user.rolSeleccionado}`);
       setTiposTutoria(response.data);
     } catch (error) {
       console.error('Error fetching tiposTutoria:', error);
@@ -49,22 +46,27 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (idUsuarioSesion) {
+    if(user && user.id){
       get();
     }
-  }, [idUsuarioSesion]);
+  }, [user]);
 
-  if (!idUsuarioSesion) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
 
-  const handleTipoTutoriaChange = (value) => {
+  const handleTipoTutoriaChange = async(value) => {
     const numericValue = Number(value);
-    const selectedTipo = tiposTutoria.find(tipo => tipo.tipoTutoria.idTipoTutoria === numericValue);
+    const selectedTipo = tiposTutoria.find(tipo => tipo.idTipoTutoria === numericValue);
+    try { //trae los tutores y alumnos sin asignar del tipo de tutoria seleccionado
+      const [response_tutor, response_alumno] = await Promise.all([
+        axios.get(`/tutorApi/listarTutorPorTipoTutoria/${selectedTipo.idTipoTutoria}`),
+        axios.get(`/alumnoApi/listarAlumnosSinAsignar/${selectedTipo.idTipoTutoria}`)
+      ]);
+      setAlumnos(response_alumno.data);
+      setTutores(response_tutor.data);
+    } catch (error) {
+      console.error('Error trayendo miembros del tipo de tutoria:', error);
+    } finally {
+      setIsLoading(false);
+    }
     setSelectedTutor(null);
     setSelectedAlumnos([]);
     setAlumnoDropdownValue(undefined);
@@ -75,24 +77,23 @@ export default function Home() {
 
   const handleSelectAlumno = (value) => {
     setAlumnoDropdownValue(value);
-    const alumno = selectedTipoTutoria.alumnos.find(a => a.persona.id.toString() === value);
+    const alumno = alumnos.find(a => a.persona.id.toString() === value);
     if (alumno && !selectedAlumnos.find(a => a.persona.id === alumno.persona.id)) {
       setSelectedAlumnos([...selectedAlumnos, alumno]);
     }
   };
 
   const handleSelectTutor = (value) => {
-    const tutor = selectedTipoTutoria.tutores.find(t => t.id === Number(value));
+    const tutor = tutores.find(t => t.id === Number(value));
     setSelectedTutor(tutor);
-
-    axios.get(`${process.env.backend}/alumnoApi/listarAlumnosAsignadosPorTutorPorTipoTutoria/${tutor.persona.id}/${selectedTipoTutoria.tipoTutoria.idTipoTutoria}`)
+    axios.get(`/alumnoApi/listarAlumnosAsignadosPorTutorPorTipoTutoria/${tutor.persona.id}/${selectedTipoTutoria.idTipoTutoria}`)
       .then(response => setAlumnosAsignadosDelTutor(response.data))
       .catch(error => {
         console.error('Error fetching alumnos asignados:', error);
         setAlumnosAsignadosDelTutor([]);
       });
 
-    const asignacionesUrl = `${process.env.backend}/asignacionApi/listarAsignacionesTutorPorTipoTutoria/${tutor.persona.id}/${selectedTipoTutoria.tipoTutoria.idTipoTutoria}`;
+    const asignacionesUrl = `/asignacionApi/listarAsignacionesTutorPorTipoTutoria/${tutor.persona.id}/${selectedTipoTutoria.idTipoTutoria}`;
     axios.get(asignacionesUrl)
       .then(response => setAsignacionesDelTutor(response.data))
       .catch(error => {
@@ -130,7 +131,7 @@ export default function Home() {
 
   const eliminarAsignacionesExistentes = async () => {
     const requests = tempRemovedAlumnos.map(asignacion =>
-      axios.delete(`${process.env.backend}/asignacionApi/borrarAsignacion/${asignacion.id}`)
+      axios.delete(`/asignacionApi/borrarAsignacion/${asignacion.id}`)
     );
 
     try {
@@ -152,11 +153,11 @@ export default function Home() {
       }
       if (selectedAlumnos.length > 0) {
         const dataPayload = {
-          idTipoTutoria: selectedTipoTutoria.tipoTutoria.idTipoTutoria,
-          idTutor: selectedTutor.persona.id,
+          idTipoTutoria: selectedTipoTutoria.idTipoTutoria,
+          idTutores: [selectedTutor.persona.id],
           idAlumnos: selectedAlumnos.map(alumno => alumno.persona.id),
         };
-        await axios.post(`${process.env.backend}/llenarAsignacion`, dataPayload);
+        await axios.post(`/llenarAsignacion`, dataPayload);
       }
       message.success("Cambios guardados exitosamente.");
       handleCancel();
@@ -168,16 +169,16 @@ export default function Home() {
   };
 
   const tipoTutoriaOptions = tiposTutoria.map(tipo => ({
-    value: tipo.tipoTutoria.idTipoTutoria.toString(),
-    label: tipo.tipoTutoria.nombre
+    value: tipo.idTipoTutoria.toString(),
+    label: tipo.nombre
   }));
 
-  const tutorOptions = selectedTipoTutoria ? selectedTipoTutoria.tutores.map(tutor => ({
+  const tutorOptions = selectedTipoTutoria ? tutores.map(tutor => ({
     value: tutor.id.toString(),
     label: `${tutor.persona.nombre} ${tutor.persona.apellidoPaterno}`
   })) : [];
 
-  const alumnoOptions = selectedTipoTutoria ? selectedTipoTutoria.alumnos.map(alumno => ({
+  const alumnoOptions = selectedTipoTutoria ? alumnos.map(alumno => ({
     value: alumno.persona.id.toString(),
     label: `${alumno.codigo} ${alumno.persona.nombre} ${alumno.persona.apellidoPaterno}`
   })) : [];
@@ -194,7 +195,7 @@ export default function Home() {
             className="dropdownStyle"
             options={tipoTutoriaOptions}
             onChange={handleTipoTutoriaChange}
-            value={selectedTipoTutoria ? selectedTipoTutoria.tipoTutoria.idTipoTutoria.toString() : undefined}
+            value={selectedTipoTutoria ? selectedTipoTutoria.idTipoTutoria.toString() : undefined}
           />
         </div>
         <div className="dropdownContainerStyle">

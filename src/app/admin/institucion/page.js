@@ -3,7 +3,7 @@
 import LayoutComponent from "@/components/LayoutComponent";
 import { useEffect, useState } from "react";
 import { Button, Flex, Typography, Modal, Input } from "antd";
-import axios from "axios";
+import axios from '@/utils/axiosConfig';
 import { adminItems } from "@/utils/menuItems";
 
 const { Title } = Typography;
@@ -22,6 +22,7 @@ export default function Home() {
   return (
     <main style={{ height: "100vh" }}>
       <LayoutComponent siderItems={adminItems}>
+      <Title style={{ color: "#043B71" }}>Institución</Title>
       </LayoutComponent>
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "@/utils/axiosConfig";
 
 const Card = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -10,9 +10,7 @@ const Card = () => {
   const handleListarClick = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `${process.env.backend}/alumnoApi/listarTodosAlumnos`
-      );
+      const response = await axios.get(`/alumnoApi/listarTodosAlumnos`);
       setAlumnos(response.data);
     } catch (error) {
       console.error("Error al obtener datos de la API:", error);

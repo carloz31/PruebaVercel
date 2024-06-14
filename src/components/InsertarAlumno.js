@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "@/utils/axiosConfig";
 
 export default function InsertarAlumno() {
   const [nombre, setNombre] = useState("");
@@ -13,7 +13,7 @@ export default function InsertarAlumno() {
   const handleInsertarClick = async () => {
     try {
       const response = await axios.post(
-        `${process.env.backend}/alumnoApi/crearAlumno`,
+        `/alumnoApi/crearAlumno`,
         {
           nombre,
           apellidoPaterno,
@@ -33,7 +33,7 @@ export default function InsertarAlumno() {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       if (response.status === 200) {
         alert("Alumno insertado exitosamente");
@@ -45,7 +45,7 @@ export default function InsertarAlumno() {
       console.error("Error al insertar alumno:", error);
       console.error(
         "Detalles de la respuesta del servidor:",
-        error.response.data
+        error.response.data,
       );
     }
   };

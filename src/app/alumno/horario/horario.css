@@ -1,91 +1,63 @@
-
 .titulo-principal{
-  font-size:  40px;
+  font-size:  32px;
   font-family: 'Nunito',sans-serif;
   color : rgb(4,59,113);
   font-weight:bold;
-  margin-left :45px;
-  margin-top: 20px;
+  margin-top: 14px;
+  margin-bottom: 20px;
 }
 
-.fecha{
-  font-size:  25px;
-  font-family: 'Nunito',sans-serif;
-  color : black;
-  margin-right: 836px;
-  margin-left :45px;
-  
+
+
+.horizontal-list li::before {
+  content: "asd";
+  display: block;
+  width: 10px; /* Ancho de la bolita */
+  height: 10px; /* Altura de la bolita */
+  border-radius: 50%; /* Hace que la bolita sea redonda */
+  background-color: red; /* Cambia el color de la bolita */
+  position: absolute; /* Posiciona el pseudo-elemento en relación al elemento <li> */
+  left: -20px; /* Desplaza la bolita a la izquierda del elemento <li> */
+  top: 50%; /* Centra verticalmente la bolita */
+  transform: translateY(-50%); /* Ajusta la posición vertical de la bolita */
 }
 
-.horizontal-list{
-    display: flex; /* Establece la visualización de los elementos de la lista en línea */
-    list-style-type: none; /* Elimina los puntos o viñetas predeterminados de la lista */
-    padding: 0; /* Elimina el relleno predeterminado de la lista */
-    font-family: "Nunito";
-    font-size : 16px;
-    margin-left: 52px;
-    margin-right: 700px;
-    
+ .calendario-contenedor{
+  margin-left: 0px;
+  margin-top:10px;
+  height :900px
+}
+
+.contenedor-fecha {
+align-items: center;
+margin-right: 50px;
+}
+
+.fecha {
+  font-size: 25px;
+  font-family: 'Nunito', sans-serif;
+  color: black;
+  margin-left: 10px;
+}
+
+.horizontal-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  margin-left: 42px; 
 }
 
 .horizontal-list li {
-    margin-right: 60px; /* Añade un margen derecho entre los elementos de la lista */
-  }
+  margin-right: 30px; /* Ajusta este valor según sea necesario */
+}
 
-  .horizontal-list li::before {
-    content: "asd";
-    display: block;
-    width: 10px; /* Ancho de la bolita */
-    height: 10px; /* Altura de la bolita */
-    border-radius: 50%; /* Hace que la bolita sea redonda */
-    background-color: red; /* Cambia el color de la bolita */
-    position: absolute; /* Posiciona el pseudo-elemento en relación al elemento <li> */
-    left: -20px; /* Desplaza la bolita a la izquierda del elemento <li> */
-    top: 50%; /* Centra verticalmente la bolita */
-    transform: translateY(-50%); /* Ajusta la posición vertical de la bolita */
-  }
-
-  .calendario-contenedor{
-    margin-left: 52px;
-    margin-top:18px;
-    margin-right:51px;
-  }
-
-  .fila-1{
-    display : flex;
-    margin-top: 20px;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 30px; 
-  }
-
-  
-  
-  .combo-box-tutor {
-    margin-right: 30px; /* Deja un espacio de 70px desde el borde derecho */
-    flex: 0 1 auto; /* Permite que el elemento se reduzca y se expanda según sea necesario */
-  }
-  
-  @media (min-width: 10%) {
-    .combo-box-tutor {
-      margin-right: 10px; /* Reduce el margen en pantallas más pequeñas para permitir más espacio de movimiento */
-      width: 10%; /* Asegura que el combo box ocupe todo el ancho disponible si es necesario */
-    }
-  }
-  
-  .fila-2{
-    display : flex;
-    margin-top: 20px;
-    height: 40px;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 60px; 
-  }
-
-  
 .boton {
-
+  height: 38px; /* Ajusta la altura para que coincida con el Select */
+  margin-right: 55px; /* Ajusta este valor según sea necesario */
   background-color: rgb(8,132,252);
+  
   width: 156px;
   height: 34px;
   color: white;
@@ -93,9 +65,127 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  
 }
 
 .palabra{
-  padding-top: 8px;
+  padding-top:10px;
 }
+
+
+
+.titleText {
+  white-space: nowrap; /* Prevents wrapping at white spaces */
+  overflow: hidden; /* Prevents text overflow */
+  text-overflow: ellipsis; /* Adds an ellipsis if text overflows */
+  min-width: 110px; /* Minimum width for the title */
+  margin-right: 5px; /* Space between title and colon */
+  text-align: left;
+  font-size: 1.5rem; /* Adjust the size as needed */
+}
+
+
+.fila-1 {
+  display: flex;
+  justify-content: space-between;
+  
+
+}
+
+.fila-2 {
+  display: flex;
+  justify-content: space-between;
+ 
+  
+  margin-top: 20px; 
+}
+.dropdownContainerStyle {
+  display: flex;
+  width: 60%;
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+.dropdownStyle {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .fila-1 {
+      flex-direction: column;
+      /*width: 100%; */
+      align-items: flex-start; 
+  }
+
+  .fila-2 {
+    flex-direction: column;
+    /*width: 100%; */
+    align-items: flex-start; 
+  }
+  
+  .dropdownContainerStyle{
+    flex-direction: column;
+    
+    
+    margin-bottom: 16px;
+    align-items: flex-start;
+    width: 100%;
+      
+    /*justify-content: flex-start;*/
+    /*margin-left: 0px; */
+  }
+
+   
+
+  .dropdownStyle {
+      margin-left: 0px; 
+      width: 100%;
+      max-width: 100%;
+  }
+  .horizontal-list {
+   
+    margin-left: 0px;
+  }
+  .fecha{
+    margin-left: 0px;
+  }
+}
+
+.opcion{
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  margin-left: 42px; 
+ 
+}
+@media (max-width: 1000px){
+  .horizontal-list {
+    flex-direction: column;
+   
+    margin-left: 0px;
+    align-items: flex-start;
+  }
+  .opcion{
+    margin-left: 0px;
+  }
+  .palabra{
+    padding-top: 0px;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  
+  .titleText {
+      min-width: 100px; /* Smaller minimum width for small devices */
+      font-size: 14px; /* Smaller font size for small devices */
+      text-align: left;
+  }
+
+}
+

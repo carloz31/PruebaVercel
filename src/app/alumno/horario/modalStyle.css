@@ -1,39 +1,43 @@
 .descripcion-input {
-    height: 100px !important; /* Ajusta la altura según tus necesidades */
-    resize: none !important; /* Evita que el usuario pueda redimensionar el área de texto */
-  }
+  height: 100px !important; /* Ajusta la altura según tus necesidades */
+  resize: none !important; /* Evita que el usuario pueda redimensionar el área de texto */
+}
 
-  .botones-formulario {
-    margin-bottom: 5px !important; /* Espacio entre los botones y el formulario */
-  }
+.botones-formulario {
+  margin-bottom: 5px !important; /* Espacio entre los botones y el formulario */
+}
+
+.botones-formulario .ant-form-item-label {
+  font-weight: 600 !important;
+}
+
+.ant-modal-content{
+  height: 720px !important;
+}
+
+.botones-formulario .ant-radio-group {
+  background-color: #E6F3FF !important; /* Color celeste de fondo */
+  padding: 5px !important; /* Añadir relleno para dar espacio entre el fondo y los botones */
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  border-radius: 10px !important;
+}
+
+.botones-formulario .ant-radio-wrapper {
+  flex-basis: calc(50% - 20px) !important; /* 33.33% para dividir en tres partes iguales, y -10px para el espacio entre los botones */
+  margin: 0 5px !important; /* Espacio entre los botones */
+  color: #1f87ef;
   
-  .botones-formulario .ant-form-item-label {
-    font-weight: 600 !important;
-  }
-  
-  .botones-formulario .ant-radio-group {
-    background-color: #E6F3FF !important; /* Color celeste de fondo */
-    padding: 5px !important; /* Añadir relleno para dar espacio entre el fondo y los botones */
-    display: flex !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    border-radius: 10px !important;
-  }
-
-  .botones-formulario .ant-radio-wrapper {
-    flex-basis: calc(50% - 20px) !important; /* 33.33% para dividir en tres partes iguales, y -10px para el espacio entre los botones */
-    margin: 0 5px !important; /* Espacio entre los botones */
-    color: #1f87ef;
-    
-  }
-  
-
-  .cancel-button {
-    background-color: #ccc !important;
-    color: #fff !important;
-  }
+}
 
 
-  .botones_form{
-    margin-top:'20px' !important;
-  }
+.cancel-button {
+  background-color: #ccc !important;
+  color: #fff !important;
+}
+
+
+.botones_form{
+  margin-top:'20px' !important;
+}

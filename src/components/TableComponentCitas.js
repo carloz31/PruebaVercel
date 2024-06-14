@@ -1,86 +1,126 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Space, Spin, Table, Tag } from "antd";
-import axios from "axios";
+import { Popconfirm, Space, Spin, Table, Tag } from "antd";
+import axios from "@/utils/axiosConfig";
 const { Column, ColumnGroup } = Table;
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { IconEdit, IconEye, IconTrashX } from "@tabler/icons-react";
 
+const TableComponentCitas = ({ isLoading, citas, alumnoVisible = true }) => {
+  if (isLoading)
+    return (
+      <div
+        style={{
+          borderRadius: 12,
+          background: "white",
+          border: "gray",
+          width: "100%",
+          height: 120,
+          alignContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
 
-const TableComponentCitas = ({ isLoading, citas }) => {
-  if (isLoading) return <Spin size="large" />;
+  const [flag, setFlag] = useState(false);
+  const [page, setPage] = useState(1);
 
-  const renderRequerimiento = (text, record) => {
-    const estadoStyle = {
-      padding: "4px 8px",
-      borderRadius: "999px",
-      color: "#fff",
-      textAlign: "center", // Centro de texto
-      display: "inline-block", // Para que el span no ocupe el ancho completo
-    };
+  const tamPagina = 20;
 
-    if (record.requerimiento === "Opcional") {
-      estadoStyle.backgroundColor = "#0884FC"; // azul para estado opcional
-    } else if (record.requerimiento === "Obligatorio") {
-      estadoStyle.backgroundColor = "#f5222d"; // rojo para estado obligatorio
-    }
-    return <span style={estadoStyle}>{record.requerimiento}</span>;
+  const renderModalidad = (text, record) => {
+    const reqColor =
+      record.modalidad === "Presencial"
+        ? "blue"
+        : record.modalidad === "Virtual"
+          ? "red"
+          : "#ffffff";
+
+    return (
+      <Tag
+        color={reqColor}
+        style={{ borderRadius: 99, fontSize: 14, padding: "4px 8px" }}
+      >
+        {record.modalidad}
+      </Tag>
+    );
   };
 
   const renderEstado = (text, record) => {
-    const estadoStyle = {
-      padding: "4px 8px",
-      borderRadius: "999px",
-      color: "#fff",
-      textAlign: "center", // Centro de texto
-      display: "inline-block", // Para que el span no ocupe el ancho completo
-    };
+    const estadoColor =
+      record.estado === "Abierto"
+        ? "#0884FC"
+        : record.estado === "Pendiente"
+          ? "#F6A700"
+          : record.estado === "Realizado"
+            ? "#52c41a"
+            : record.estado === "Cancelado"
+              ? "#f5222d"
+              : "#ffffff";
 
-    if (record.estado === "Pendiente") {
-      estadoStyle.backgroundColor = "#F6A700"; // amarillo para estado pendiente
-    } else if (record.estado === "Realizado") {
-      estadoStyle.backgroundColor = "#52c41a"; // verde para estado realizado
+    return (
+      <Tag
+        color={estadoColor}
+        style={{ borderRadius: 99, fontSize: 14, padding: "4px 8px" }}
+      >
+        {record.estado}
+      </Tag>
+    );
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.post(`/citaApi/eliminarCita/${id}`);
+      if (response.status == 200) {
+        setFlag(true);
+        flagtable && flagtable(flag);
+      } else {
+      }
+    } catch (error) {
+      console.error("Error: ", error);
     }
-    return <span style={estadoStyle}>{record.estado}</span>;
   };
 
   return (
-    <Table dataSource={citas} pagination={{ position: ["none","bottomCenter"] }}>
+    <Table
+      dataSource={citas}
+      pagination={{
+        position: ["none", "bottomCenter"],
+        pageSize: tamPagina,
+        onChange(current) {
+          setPage(current);
+        },
+      }}
+    >
       <Column
         title="Nº"
         dataIndex="index"
         key="index"
         align="center"
-        render={(text, record, index) => index + 1}
+        render={(text, record, index) => (page - 1) * tamPagina + index + 1}
       />
-      <Column
-        title="Alumno"
-        dataIndex="nombres"
-        key="nombres"
-        align="center"
-        render={(text, record) =>
-          `${record.firstName} ${record.lastName} ${record.lastName2}`
-        }
-      />
-      <Column 
-        title="Fecha"
-        dataIndex="fecha"
-        key="fecha"
-        align="center"
-      />
-      <Column
-        title="Requerimiento"
-        dataIndex="requerimiento"
-        key="requerimiento"
-        align="center"
-        render={renderRequerimiento}
-      />
+      {alumnoVisible && (
+        <Column
+          title="Alumno"
+          dataIndex="nombres"
+          key="nombres"
+          align="center"
+          render={(text, record) =>
+            `${record.firstName} ${record.lastName} ${record.lastName2}`
+          }
+        />
+      )}
+      <Column title="Fecha" dataIndex="fecha" key="fecha" align="center" />
+      <Column title="Hora" dataIndex="hora" key="hora" align="center" />
       <Column
         title="Modalidad"
         dataIndex="modalidad"
         key="modalidad"
         align="center"
+        render={renderModalidad}
       />
       <Column
         title="Tipo de Cita"
@@ -102,14 +142,31 @@ const TableComponentCitas = ({ isLoading, citas }) => {
         align="center"
         render={(text, record) => (
           <Space size="middle">
-            <Link href={'/tutor/citas/detalle'}>
-            <EditOutlined
-              style={{ fontSize: "16px", color: "#0884FC", cursor: "pointer" }}
-            /></Link>
-            <DeleteOutlined
-              style={{ fontSize: "16px", color: "#0884FC" }}
-              onClick={() => handleDelete(record.id)}
-            />
+            <Link
+              href={{
+                pathname: `/tutor/citas/detalle`,
+                query: {
+                  cita: JSON.stringify(record),
+                },
+              }}
+            >
+              <IconEye
+                size={20}
+                style={{
+                  cursor: "pointer",
+                  color: "#0884FC",
+                }}
+              />
+            </Link>
+            <Popconfirm
+              title="¿Estás seguro de eliminar esta cita?"
+              onConfirm={() => handleDelete(record.id)}
+            >
+              <IconTrashX
+                size={20}
+                style={{ cursor: "pointer", color: "#f5222d" }}
+              />
+            </Popconfirm>
           </Space>
         )}
       ></Column>

@@ -1,12 +1,10 @@
 "use client";
-
 import React from "react";
 import { Layout, Menu, Button, Typography, ConfigProvider, theme } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "./landing.css";
-import "@fontsource-variable/nunito";
 import { landingThemeConfig } from "@/utils/themeConfigs";
 
 const { Header, Content } = Layout;

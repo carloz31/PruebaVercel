@@ -1,45 +1,74 @@
 import React, { useState, useEffect } from "react";
-import {Avatar, Button, Card, Tooltip} from "antd";
-import { PlusCircleOutlined, MinusCircleOutlined  } from "@ant-design/icons";
+import { Avatar, Button, Card, Tooltip, Typography } from "antd";
+import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
+
+const { Text, Title } = Typography;
+
 const { Meta } = Card;
 
-export default function CardAlumnoSesion({ alumno, onToggleSelection, resetSelection  }) {
+export default function CardAlumnoSesion({ alumno, onToggleSelection, selected, resetSelection }) {
   const placeholderImage = "/user.png";
-  const [selected, setSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState(selected);
 
-  //Restablece estado Inicial una vez que se creo la sesion
   useEffect(() => {
-    setSelected(true);
-  }, [resetSelection]);
+    setIsSelected(selected);
+  }, [selected, resetSelection]);
 
-  //Llama a la función de callback con el alumno y su estado de selección
   const handleToggle = () => {
-    setSelected(!selected);
-    onToggleSelection(alumno.persona.id, !selected);
+    const newSelected = !isSelected;
+    setIsSelected(newSelected);
+    onToggleSelection(alumno, newSelected);
   };
 
-
   return (
-    <Card style={{ width: 300, margin: '10px' }} type="inner">
+    <Card
+      size="small"
+      style={{ width: 300, margin: "10px", padding: "8px" }}
+      type="inner"
+    >
       <Meta
         avatar={<Avatar size={48} src={alumno.foto || placeholderImage} />}
         title={
-          <>
-            {alumno.persona.nombre} {alumno.persona.apellidoPaterno} {alumno.persona.apellidoMaterno}
-            <Tooltip title={selected ? "Seleccionar" : "Deseleccionar"}>
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            <Title
+              level={5}
+              style={{
+                width: "100%",
+                whiteSpace: "initial",
+                paddingRight: "6px",
+              }}
+            >
+              {alumno.persona.nombre} {alumno.persona.apellidoPaterno}{" "}
+              {alumno.persona.apellidoMaterno}
+            </Title>
+            <Tooltip title={isSelected ? "Deseleccionar" : "Seleccionar"}>
               <Button
                 shape="circle"
-                icon={selected ? 
-                  (<PlusCircleOutlined style={{ color: "green" }}/>) : 
-                  (<MinusCircleOutlined style={{ color: "red" }}/>)
+                icon={
+                  isSelected ? (
+                    <MinusCircleOutlined style={{ color: "red" }} />
+                  ) : (
+                    <PlusCircleOutlined style={{ color: "green" }} />
+                  )
                 }
                 onClick={handleToggle}
-                style={{ borderColor: selected ? "green" : "red",float: "right", }}
+                style={{
+                  borderColor: isSelected ? "red" : "green",
+                  float: "right",
+                }}
               />
             </Tooltip>
-          </>
+          </div>
         }
-        description={alumno.correo}
+        description={
+          <Text ellipsis style={{ color: "gray" }}>
+            {alumno.correo}
+          </Text>
+        }
       />
     </Card>
   );

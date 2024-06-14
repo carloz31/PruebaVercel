@@ -1,25 +1,75 @@
 "use client";
 
-import React from "react";
-import { Flex, Menu } from "antd";
+import React, { useState } from "react";
+import { Menu } from "antd";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+const { SubMenu } = Menu;
 
 const SiderList = ({ items }) => {
-  const onClick = (e) => {
-    console.log("click ", e);
+  const [openKeys, setOpenKeys] = useState([]);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const onClick = ({ key }) => {
+    router.push(key);
   };
 
-  const pathname = usePathname();
+  const onTitleClick = (link, e) => {
+    e.stopPropagation();
+    router.push(link);
+  };
+
+  const onOpenChange = (keys) => {
+    setOpenKeys(keys);
+  };
+
+  const getSelectedKeys = () => {
+    return [
+      `/${pathname
+        .split("/")
+        .filter((item) => item)
+        .slice(0, 2)
+        .join("/")}`,
+    ];
+  };
+
+  const renderMenuItems = (items) => {
+    return items.map(item => {
+      if (item.children) {
+        return (
+          <SubMenu
+            key={item.key}
+            icon={item.icon}
+            title={
+              <div onClick={(e) => onTitleClick(item.link, e)} style={{ transition: 'all 0.3s ease' }}>
+                {item.label}
+              </div>
+            }
+            style={{ transition: 'all 0.3s ease' }}
+          >
+            {renderMenuItems(item.children)}
+          </SubMenu>
+        );
+      }
+      return (
+        item.visible && (
+          <Menu.Item key={item.link} icon={item.icon} style={{ transition: 'all 0.3s ease' }}>
+            {item.label}
+          </Menu.Item>
+        )
+      );
+    });
+  };
 
   return (
-    <Flex style={{ padding: "10px" }} vertical align="center" gap="middle">
+    <div style={{ padding: "10px" }}>
       <Image
         src="/logo.svg"
         width={200}
         height={200}
-        alt="Picture of the author"
+        alt="Logo"
       />
       <Menu
         onClick={onClick}
@@ -27,21 +77,17 @@ const SiderList = ({ items }) => {
           width: "100%",
           textAlign: "left",
           border: "none",
+          transition: 'all 0.3s ease'
         }}
-        defaultSelectedKeys={[pathname]}
-        defaultOpenKeys={["sub1"]}
+        selectedKeys={getSelectedKeys()}
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
         mode="inline"
       >
-        {items.map(
-          (item) =>
-            item.visible && (
-              <Menu.Item key={item.link} icon={item.icon}>
-                <Link href={item.link}>{item.label}</Link>
-              </Menu.Item>
-            )
-        )}
+        {renderMenuItems(items)}
       </Menu>
-    </Flex>
+    </div>
   );
 };
+
 export default SiderList;

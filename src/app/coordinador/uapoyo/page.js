@@ -3,8 +3,9 @@
 import LayoutComponent from "@/components/LayoutComponent";
 import { useEffect, useState } from "react";
 import { Button, Flex, Typography, Modal, Input } from "antd";
-import axios from "axios";
+import axios from '@/utils/axiosConfig';
 import { coordinadorItems } from "@/utils/menuItems";
+import { coordinadorBreadcrumbNames } from "@/utils/breadcrumbNames";
 
 const { Title } = Typography;
 
@@ -21,7 +22,7 @@ export default function Home() {
 
   return (
     <main style={{ height: "100vh" }}>
-      <LayoutComponent siderItems={coordinadorItems}>
+      <LayoutComponent siderItems={coordinadorItems} breadcrumbNames={coordinadorBreadcrumbNames}>
       </LayoutComponent>
     </main>
   );
